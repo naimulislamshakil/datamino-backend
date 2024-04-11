@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const errorHandler = require('./utils/errorHandler');
 const port = process.env.PORT || 5000;
+const authRoute = require('./Router/v1/auth.route');
 require('dotenv').config();
 
 app.use(bodyParser.json());
@@ -12,13 +13,15 @@ app.use(express.json());
 app.use(cors());
 
 mongoose
-	.connect('mongodb://localhost:27017', {})
-	.then(() => console.log('Database is connected successfully'))
-	.catch((e) => console.log(e));
+	.connect('mongodb://0.0.0.0:27017', {})
+	.then(() => console.log('Database connected successfully.'))
+	.catch((err) => console.log(err));
 
 app.get('/', (req, res) => {
 	res.send('<h1>How are you?</h1>');
 });
+
+app.use('/', authRoute);
 
 app.use('*', (req, res, next) => {
 	const { baseUrl } = req;
