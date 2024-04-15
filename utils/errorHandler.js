@@ -1,13 +1,11 @@
-const AppError = require('./AppError');
+exports.errorHandler = (err, req, res, next) => {
+	console.log(err);
 
-const errorHandler = (err, req, res, next) => {
-	if (err instanceof AppError) {
-		return res.status(err.statusCode).json({
-			errorCode: err.errorCode,
-			errorMessage: err.message,
-		});
-	}
-	return res.status(500).send(err.message);
+	const errStatus = err.statusCode || 500;
+	const errMsg = err.message || 'Something went wrong';
+	res.status(errStatus).json({
+		success: false,
+		status: errStatus,
+		message: errMsg,
+	});
 };
-
-module.exports = errorHandler;

@@ -3,7 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
-const errorHandler = require('./utils/errorHandler');
+const { errorHandler } = require('./utils/errorHandler');
 const port = process.env.PORT || 5000;
 const authRoute = require('./Router/v1/auth.route');
 require('dotenv').config();
