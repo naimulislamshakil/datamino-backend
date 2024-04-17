@@ -1,7 +1,12 @@
 const { USER_NOT_FOUND } = require('../constants/errorCode');
-const { singupService, isUserExist } = require('../services/auth.service');
+const {
+	singupService,
+	isUserExist,
+	findById,
+} = require('../services/auth.service');
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/token');
+const { constrainedMemory } = require('process');
 
 exports.registationCollaction = async (req, res, next) => {
 	try {
@@ -60,5 +65,23 @@ exports.loginCollaction = async (req, res, next) => {
 		});
 	} catch (error) {
 		return next(error);
+	}
+};
+
+exports.persistentCollaction = async (req, res, next) => {
+	try {
+		const { id } = req.user;
+
+		const user = await findById(id);
+
+		const { password, ...other } = user.toObject();
+
+		res.status(200).json({
+			success: true,
+			status: 200,
+			user: other,
+		});
+	} catch (error) {
+		next(error?.message || 'Something Went Wrong.');
 	}
 };

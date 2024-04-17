@@ -9,3 +9,7 @@ exports.isUserExist = async (email) => {
 	const isUser = await UserModel.findOne({ email });
 	return isUser;
 };
+
+exports.findById = async (id) => {
+	return await UserModel.findById({ _id: id });
+};
