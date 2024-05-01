@@ -57,11 +57,12 @@ exports.loginCollaction = async (req, res, next) => {
 
 		const token = generateToken(email, user._id);
 
+		res.cookie('token', token, { httpOnly: true, maxAge: 360000 });
+
 		res.status(200).json({
 			success: true,
 			status: 200,
 			message: 'User Successfully Login..',
-			token,
 		});
 	} catch (error) {
 		return next(error);
@@ -79,9 +80,17 @@ exports.persistentCollaction = async (req, res, next) => {
 		res.status(200).json({
 			success: true,
 			status: 200,
-			user: other,
+			data: other,
 		});
 	} catch (error) {
 		next(error?.message || 'Something Went Wrong.');
 	}
+};
+
+exports.logoutCollaction = async (req, res) => {
+	res.clearCookie('token');
+	res.status(200).json({
+		success: true,
+		status: 200,
+	});
 };

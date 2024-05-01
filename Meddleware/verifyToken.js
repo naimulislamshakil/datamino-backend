@@ -1,12 +1,15 @@
 const jwt = require('jsonwebtoken');
+const { USER_NOT_FOUND } = require('../constants/errorCode');
 
 exports.verifyToken = async (req, res, next) => {
 	try {
-		const token = req.headers?.authorization?.split(' ')[1];
+		const token = req.cookies.token;
 
-		if (!token || token === 'null') {
+		// const token = req.headers?.authorization?.split(' ')[1];
+
+		if (token === undefined) {
 			const error = {
-				statusCode: 401,
+				statusCode: USER_NOT_FOUND,
 				message: 'You Are Not Logged In.',
 			};
 			return next(error);
@@ -20,4 +23,3 @@ exports.verifyToken = async (req, res, next) => {
 		next(error?.message || 'Something Want Wrong.');
 	}
 };
-

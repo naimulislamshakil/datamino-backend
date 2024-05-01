@@ -3,14 +3,22 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
+const cookiePerser = require('cookie-parser');
 const { errorHandler } = require('./utils/errorHandler');
 const port = process.env.PORT || 5000;
 const authRoute = require('./Router/v1/auth.route');
+const patientRoute = require('./Router/v1/patient.route');
 require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
+app.use(
+	cors({
+		origin: ['http://localhost:3000', 'https://sass-product.vercel.app'],
+		credentials: true,
+	})
+);
+app.use(cookiePerser());
 
 mongoose
 	.connect('mongodb://0.0.0.0:27017', {})
@@ -22,6 +30,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', authRoute);
+app.use('/', patientRoute);
 
 app.use('*', (req, res, next) => {
 	const { baseUrl } = req;
